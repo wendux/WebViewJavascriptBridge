@@ -1,14 +1,15 @@
 WebViewJavascriptBridge
 =======================
 
-[![Circle CI](https://img.shields.io/circleci/project/github/marcuswestin/WebViewJavascriptBridge.svg)](https://circleci.com/gh/marcuswestin/WebViewJavascriptBridge)
+[![](https://jitpack.io/v/wendux/WebViewJavascriptBridge.svg)](https://jitpack.io/#wendux/WebViewJavascriptBridge)[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://opensource.org/licenses/mit-license.php) 
+
 
 An Android bridge for sending messages between Java and JavaScript in WebView. and **It is a mirror of [marcuswestin/WebViewJavascriptBridge](https://github.com/marcuswestin/WebViewJavascriptBridge) which supports IOS platforms.** 
 
 Introduction
 ---------------
 
- This Android version project is a mirror of [marcuswestin/WebViewJavascriptBridge](https://github.com/marcuswestin/WebViewJavascriptBridge) ,  so there are five major areas where they are parity and similarity: API design, native code, javascript code, automated testing coverage, and documentation.
+ This Android version project is a mirror of [marcuswestin/WebViewJavascriptBridge](https://github.com/marcuswestin/WebViewJavascriptBridge) ,  so there are some similarities between the two project , such as  API design, native code, and the Javascript code is exactly the same.
 
 Installation 
 ------------------------
