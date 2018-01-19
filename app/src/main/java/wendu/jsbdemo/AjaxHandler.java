@@ -1,12 +1,16 @@
 package wendu.jsbdemo;
+
 import android.util.Base64;
+
 import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -14,7 +18,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import wendu.dsbridge.CompletionHandler;
+import wendu.webviewjavascriptbridge.WVJBWebView;
 
 /**
  * Created by du on 2017/10/31.
@@ -25,7 +29,7 @@ import wendu.dsbridge.CompletionHandler;
  */
 
 public class AjaxHandler {
-    public static void onAjaxRequest(final JSONObject requestData, final CompletionHandler handler){
+    public static void onAjaxRequest(final JSONObject requestData, final WVJBWebView.WVJBResponseCallback handler){
         final Map<String, Object> responseData=new HashMap<>();
         responseData.put("statusCode",0);
 
@@ -79,7 +83,7 @@ public class AjaxHandler {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     responseData.put("responseText",e.getMessage());
-                    handler.complete(new JSONObject(responseData).toString());
+                    handler.callback(new JSONObject(responseData).toString());
                 }
 
                 @Override
@@ -97,13 +101,13 @@ public class AjaxHandler {
                     Map<String, List<String>> responseHeaders= response.headers().toMultimap();
                     responseHeaders.remove(null);
                     responseData.put("headers",responseHeaders);
-                    handler.complete(new JSONObject(responseData).toString());
+                    handler.callback(new JSONObject(responseData).toString());
                 }
             });
 
         }catch (Exception e){
             responseData.put("responseText",e.getMessage());
-            handler.complete(new JSONObject(responseData).toString());
+            handler.callback(new JSONObject(responseData).toString());
         }
     }
 }

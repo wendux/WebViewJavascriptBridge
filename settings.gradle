@@ -1,1 +1,1 @@
-include ':app', ':dsbridge'
+include ':app', ':webviewjavascriptbridge'

@@ -1,13 +1,10 @@
 package wendu.jsbdemo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-
-import wendu.dsbridge.DWebView;
-import wendu.dsbridge.OnReturnValue;
+import android.view.View;
+import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,23 +12,25 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final DWebView webView= (DWebView) findViewById(R.id.webview);
-        webView.setJavascriptInterface(new JsApi());
-        webView.clearCache(true);
-        //webView.loadUrl("http://10.99.1.175:63341/Fly/demon/dsbridge.html");
-        webView.loadUrl("file:///android_asset/test.html");
-        webView.setWebViewClient(new WebViewClient(){
+        Button echoBtn= (Button) findViewById(R.id.echo);
+        Button example= (Button) findViewById(R.id.example);
+        Button fly= (Button) findViewById(R.id.fly);
+        echoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-                webView.callHandler("addValue",new Object[]{1,"hello"},new OnReturnValue(){
-                    @Override
-                    public void onValue(String retValue) {
-                        Log.d("jsbridge","call succeed,return value is "+retValue);
-                    }
-                });
-
-               // webView.callHandler("test",null);
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,EchoActivity.class));
+            }
+        });
+        example.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,ExampleActivity.class));
+            }
+        });
+        fly.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,FlyTestActivity.class));
             }
         });
 
