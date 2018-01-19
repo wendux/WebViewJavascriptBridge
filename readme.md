@@ -58,7 +58,7 @@ WVJBWebView webView= (WVJBWebView) findViewById(R.id.webview);
 2) Register a handler in Java, and call a JS handler:
 
 ```objc
-webView.registerHandler("ObjC Echo", new WVJBWebView.WVJBHandler() {
+webView.registerHandler("Java Echo", new WVJBWebView.WVJBHandler() {
   @Override
     public void handler(Object data, WVJBWebView.WVJBResponseCallback callback) {
     Log.d("wvjsblog","Java Echo called with: "+data.toString());
