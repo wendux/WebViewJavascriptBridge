@@ -1,18 +1,17 @@
+WebViewJavascriptBridge
+=======================
 
-# DSBridge
+[![Circle CI](https://img.shields.io/circleci/project/github/marcuswestin/WebViewJavascriptBridge.svg)](https://circleci.com/gh/marcuswestin/WebViewJavascriptBridge)
 
-[![](https://jitpack.io/v/wendux/DSBridge-Android.svg)](https://jitpack.io/#wendux/DSBridge-Android)   [![MIT Licence](https://img.shields.io/packagist/l/doctrine/orm.svg)](https://opensource.org/licenses/mit-license.php)
->DSBridge is currently the best Javascript bridge  in the world , by which we can call functions synchronously and asynchronously between web and Native . Moreover, both android and ios  are supported  ! 
+An Android bridge for sending messages between Java and JavaScript in WebView. and **It is a mirror of [marcuswestin/WebViewJavascriptBridge](https://github.com/marcuswestin/WebViewJavascriptBridge) which supports IOS platforms.** 
 
-DSBridge-IOS:https://github.com/wendux/DSBridge-IOS
+Introduction
+---------------
 
-DSBridge-Android:https://github.com/wendux/DSBridge-Android
+ This Android version project is a mirror of [marcuswestin/WebViewJavascriptBridge](https://github.com/marcuswestin/WebViewJavascriptBridge) ,  so there are five major areas where they are parity and similarity: API design, native code, javascript code, automated testing coverage, and documentation.
 
-2.0更新列表：https://juejin.im/post/593fa055128fe1006aff700a
-
-中文文档：https://github.com/wendux/DSBridge-Android/blob/master/readme-chs.md
-
-## Download
+Installation 
+------------------------
 
 1. Add the JitPack repository to your build file
 
@@ -29,137 +28,182 @@ DSBridge-Android:https://github.com/wendux/DSBridge-Android
 
    ```java
    dependencies {
-   	compile 'com.github.wendux:DSBridge-Android:2.0-SNAPSHOT'
-
-   	// support  the x5 browser core of tencent
-   	// compile 'com.github.wendux:DSBridge-Android:x5-SNAPSHOT'
-
-   	//compile 'com.github.wendux:DSBridge-Android:master-SNAPSHOT'
+   	compile 'com.github.wendux:WebViewJavascriptBridge:master-SNAPSHOT'
    }
    ```
 
-## Usage
+Examples
+--------
 
-1. Implement apis in Java
+See the `wendu.jsbdemo/` folder. run the `app` project and to see it in action.
 
-   ```java
-   public class JsApi{
-       //for synchronous invocation
-       @JavascriptInterface
-       String testSyn(JSONObject jsonObject) throws JSONException {
-           // The return value type can only be  String
-           return jsonObject.getString("msg") + "［syn call］";
-       }
-       //for asynchronous invocation
-       @JavascriptInterface
-       void testAsyn(JSONObject jsonObject, CompletionHandler handler) throws JSONException {
-           handler.complete(jsonObject.getString("msg")+" [asyn call]");
-       }
-   }
-   ```
+To use a WebViewJavascriptBridge in your own project:
 
-   For security reason, Java api must be with "@JavascriptInterface" annotation, For more detail about this topic, please google .
+Usage
+-----
 
-2. Setup api class to DWebView  instance.
-
-   ```javascript
-   import wendu.dsbridge.DWebView
-   ...
-   DWebView dwebView= (DWebView) findViewById(R.id.dwebview);
-   dwebView.setJavascriptInterface(new JsApi());
-   ```
-
-3. Call Java api in Javascript, and declare a global  javascript function for the following java invocation.
-
-   - Init dsBridge
-
-     ```javascript
-     //cdn
-     //<script src="https://unpkg.com/dsbridge/dist/dsbridge.js"> </script>
-     //npm
-     //npm install dsbridge
-     var dsBridge=require("dsbridge")
-     ```
-
-   - Call API
-
-     ```javascript
-
-     //Call synchronously 
-     var str=dsBridge.call("testSyn", {msg: "testSyn"});
-
-     //Call asynchronously
-     dsBridge.call("testAsyn", {msg: "testAsyn"}, function (v) {
-       alert(v);
-     })
-     //Register javascript function for Native invocation
-      dsBridge.register('addValue',function(l,r){
-          return l+r;
-      })
-     ```
-
-4. Call Javascript function in java
-
-   ```java
-   webView.callHandler("addValue",new Object[]{1,"hello"},new OnReturnValue(){
-          @Override
-          public void onValue(String retValue) {
-             Log.d("jsbridge","call succeed,return value is "+retValue);
-          }
-   });
-   ```
-
-​    Notice: Be sure that calling javascript functions must at  "PageFinished". 
-
-
-
-## Javascript API introduction
-
-### **dsBridge** 
-
-"dsBridge" is available after dsBridge Initialization  , it has two method "call" and "register";
-
-### bridge.call(method,[args,callback])
-
-Call Java api synchronously and asynchronously。
-
-method: Java method name
-
-args: arguments with json object
-
-callback(String returnValue):callback to handle the result. **only asynchronous invocation required**.
-
-### dsBridge.register(methodName,function)
-
-Register javascript method for Native invocation.
-
-methodName: javascript function name
-
-function: javascript method body.
-
-## Notice
-
-### Java api signature
-
-In order to be compatible with IOS and Android, we make the following convention  on native api signature:
-
-1. The tye of return value must be **String;** if not need, just return null.
-2. The arguments  passed by   JSONObject, if the api doesn't need argument, you still need declare the jsonObject argument. 
-
-### More about DWebview
-
-In DWebview, the following functions will execute in main thread automatically, you need not to switch thread by yourself.
+1) Use `WVJBWebView` instead of `WebView`:
 
 ```java
-void loadUrl( String url) 
-void loadUrl(final String url, Map<String, String> additionalHttpHeaders)
-void evaluateJavascript(String script) 
+import wendu.webviewjavascriptbridge.WVJBWebView
+```
+
+...
+
+```java
+WVJBWebView webView= (WVJBWebView) findViewById(R.id.webview);
+```
+
+2) Register a handler in Java, and call a JS handler:
+
+```objc
+webView.registerHandler("ObjC Echo", new WVJBWebView.WVJBHandler() {
+  @Override
+    public void handler(Object data, WVJBWebView.WVJBResponseCallback callback) {
+    Log.d("wvjsblog","Java Echo called with: "+data.toString());
+    callback.callback(data);
+  }
+});
+
+webView.callHandler("JS Echo", null, new WVJBWebView.WVJBResponseCallback() {
+  @Override
+    public void callback(Object data) {
+     Log.d("wvjsblog","Java received response: "+data.toString());
+    }
+});
+```
+
+3) Copy and paste `setupWebViewJavascriptBridge` into your JS:
+​	
+```javascript
+function setupWebViewJavascriptBridge(callback) {
+	if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }
+	if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(callback); }
+	window.WVJBCallbacks = [callback];
+	var WVJBIframe = document.createElement('iframe');
+	WVJBIframe.style.display = 'none';
+	WVJBIframe.src = 'https://__bridge_loaded__';
+	document.documentElement.appendChild(WVJBIframe);
+	setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0)
+}
+```
+
+5) Finally, call `setupWebViewJavascriptBridge` and then use the bridge to register handlers and call Java handlers:
+
+```javascript
+setupWebViewJavascriptBridge(function(bridge) {
+	
+	/* Initialize your app here */
+
+	bridge.registerHandler('JS Echo', function(data, responseCallback) {
+		console.log("JS Echo called with:", data)
+		responseCallback(data)
+	})
+	bridge.callHandler('Java Echo', {'key':'value'}, function responseCallback(responseData) {
+		console.log("JS received response:", responseData)
+	})
+})
+```
+
+API Reference
+-------------
+
+### Java API
+
+
+##### `webview.registerHandler(String handlerName, WVJBHandler handler);`
+
+
+Register a handler called `handlerName`. The javascript can then call this handler with `WebViewJavascriptBridge.callHandler("handlerName")`.
+
+Example:
+
+```objc
+webView.registerHandler("getScreenHeight", new WVJBWebView.WVJBHandler() {
+  @Override
+    public void handler(Object data, WVJBWebView.WVJBResponseCallback callback) {
+    //wm is WindowManager
+    callback.callback(wm.getDefaultDisplay().getHeight());
+   }
+});
+
+webView.registerHandler("log", new WVJBWebView.WVJBHandler() {
+  @Override
+    public void handler(Object data, WVJBWebView.WVJBResponseCallback callback) {
+     Log.d("wvjsblog","Log: "+data.toString());
+   }
+});
+```
+
+##### `webview.callHandler(String handlerName, WVJBResponseCallback responseCallback)`
+
+##### `webview.callHandler(String handlerName, Object data,WVJBResponseCallback responseCallback)`
+
+Call the javascript handler called `handlerName`. If a `responseCallback`  is given, the javascript handler can respond.
+
+Example:
+
+```objc
+webview.callHandler("showAlert","Hi from Java to JS!");
+webview.callHandler("getCurrentPageUrl", null, new WVJBWebView.WVJBResponseCallback() {
+   @Override
+    public void callback(Object data) {
+     Log.d("wvjsblog","Current WVJBWebView page URL is: %@"+data.toString());
+   }
+});
+                  
+```
+
+##### `webview.disableJavscriptAlertBoxSafetyTimeout(bool disable)`
+
+UNSAFE. Speed up bridge message passing by disabling the setTimeout safety check. It is only safe to disable this safety check if you do not call any of the javascript popup box functions (alert, confirm, and prompt). If you call any of these functions from the bridged javascript code, the app will hang.
+
+Example:
+
+	webview.disableJavscriptAlertBoxSafetyTimeout(true);
+
+
+
+### Javascript API
+
+##### `bridge.registerHandler("handlerName", function(responseData) { ... })`
+
+Register a handler called `handlerName`. The Java can then call this handler with `webview callHandler("handlerName","Foo")` and `webview.callHandler("handlerName", "Foo",  new WVJBWebView.WVJBResponseCallback() {...})`
+
+Example:
+
+```javascript
+bridge.registerHandler("showAlert", function(data) { alert(data) })
+bridge.registerHandler("getCurrentPageUrl", function(data, responseCallback) {
+	responseCallback(document.location.toString())
+})
 ```
 
 
+##### `bridge.callHandler("handlerName", data)`
+##### `bridge.callHandler("handlerName", data, function responseCallback(responseData) { ... })`
 
-###  alert/confirm/prompt dialog
-For alert/confirm/prompt dialog, DSBridge has implemented them  all by default, if you want to custom them, override the corresponding  callback in WebChromeClient class.
-### Finally
+Call an Java handler called `handlerName`. If a `responseCallback` function is given the Java handler can respond.
 
-If you like DSBridge, please star to let more people know it , Thank you  😄.
+Example:
+
+```javascript
+bridge.callHandler("Log", "Foo")
+bridge.callHandler("getScreenHeight", null, function(response) {
+	alert('Screen height:' + response)
+})
+```
+
+
+##### `bridge.disableJavscriptAlertBoxSafetyTimeout(...)`
+
+Calling `bridge.disableJavscriptAlertBoxSafetyTimeout(...)` has the same effect as calling `webview disableJavscriptAlertBoxSafetyTimeout(...)` in Java.
+
+Example:
+
+```javascript
+//disable
+bridge.disableJavscriptAlertBoxSafetyTimeout()
+//restore 
+bridge.disableJavscriptAlertBoxSafetyTimeout(false)
+```
