@@ -4,7 +4,7 @@ WebViewJavascriptBridge
 [![](https://jitpack.io/v/wendux/WebViewJavascriptBridge.svg)](https://jitpack.io/#wendux/WebViewJavascriptBridge)   [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://opensource.org/licenses/mit-license.php) 
 
 
-An Android bridge for sending messages between Java and JavaScript in WebView. and **It is a mirror of [marcuswestin/WebViewJavascriptBridge](https://github.com/marcuswestin/WebViewJavascriptBridge) which supports IOS platforms.** 
+An  **Android**  bridge for sending messages between Java and JavaScript in WebView. and It is a mirror of [marcuswestin/WebViewJavascriptBridge](https://github.com/marcuswestin/WebViewJavascriptBridge) which supports IOS platforms.
 
 Introduction
 ---------------
