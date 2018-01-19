@@ -205,6 +205,6 @@ Example:
 ```javascript
 //disable
 bridge.disableJavscriptAlertBoxSafetyTimeout()
-//restore 
+//enable
 bridge.disableJavscriptAlertBoxSafetyTimeout(false)
 ```
