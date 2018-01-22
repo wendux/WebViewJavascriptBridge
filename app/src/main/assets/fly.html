@@ -42,10 +42,10 @@
 <div style="text-align:center"><img id="img"></div>
 <script>
 
-    function setupWebViewJavascriptBridge(callback) {
-        if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }
-        if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(callback); }
-        window.WVJBCallbacks = [callback];
+    function setupWebViewJavascriptBridge(onResult) {
+        if (window.WebViewJavascriptBridge) { return onResult(WebViewJavascriptBridge); }
+        if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(onResult); }
+        window.WVJBCallbacks = [onResult];
         var WVJBIframe = document.createElement('iframe');
         WVJBIframe.style.display = 'none';
         WVJBIframe.src = 'https://__bridge_loaded__';
@@ -53,8 +53,8 @@
         setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0)
     }
 
-    function addClick(id,callback){
-      document.getElementById(id).addEventListener("click",callback);
+    function addClick(id,onResult){
+      document.getElementById(id).addEventListener("click",onResult);
     }
 
     //Fly will forward the ajax request to native by WebviewJavascriptBridge,

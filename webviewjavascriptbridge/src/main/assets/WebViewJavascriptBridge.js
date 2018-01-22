@@ -34,8 +34,15 @@
         },
         handleMessageFromJava: function (messageJSON) {
             _dispatchMessageFromJava(messageJSON); 
+        },
+        hasNativeMethod:function(name,responseCallback){
+         this.callHandler('hasNativeMethod',name,responseCallback);
         }
     };
+
+    bridge.registerHandler('hasJavascriptMethod',function(data,responseCallback){
+      responseCallback(!!messageHandlers[data])
+    })
 
     function _dispatchMessageFromJava(message) {
             var messageHandler;

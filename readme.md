@@ -62,13 +62,13 @@ webView.registerHandler("Java Echo", new WVJBWebView.WVJBHandler() {
   @Override
     public void handler(Object data, WVJBWebView.WVJBResponseCallback callback) {
     Log.d("wvjsblog","Java Echo called with: "+data.toString());
-    callback.callback(data);
+    callback.onResult(data);
   }
 });
 
 webView.callHandler("JS Echo", null, new WVJBWebView.WVJBResponseCallback() {
   @Override
-    public void callback(Object data) {
+    public void onResult(Object data) {
      Log.d("wvjsblog","Java received response: "+data.toString());
     }
 });
@@ -124,7 +124,7 @@ webView.registerHandler("getScreenHeight", new WVJBWebView.WVJBHandler() {
   @Override
     public void handler(Object data, WVJBWebView.WVJBResponseCallback callback) {
     //wm is WindowManager
-    callback.callback(wm.getDefaultDisplay().getHeight());
+    callback.onResult(wm.getDefaultDisplay().getHeight());
    }
 });
 
@@ -148,7 +148,7 @@ Example:
 webview.callHandler("showAlert","Hi from Java to JS!");
 webview.callHandler("getCurrentPageUrl", null, new WVJBWebView.WVJBResponseCallback() {
    @Override
-    public void callback(Object data) {
+    public void onResult(Object data) {
      Log.d("wvjsblog","Current WVJBWebView page URL is: %@"+data.toString());
    }
 });
@@ -207,4 +207,41 @@ Example:
 bridge.disableJavscriptAlertBoxSafetyTimeout()
 //enable
 bridge.disableJavscriptAlertBoxSafetyTimeout(false)
+```
+
+
+
+## Expansion For Android
+
+In this Android version, I have added a way to judge whether the handler (Javascript and java) exists.
+
+**In Java**
+
+```java
+webview.hasJavascriptMethod(String handlerName,  WVJBMethodExistCallback callback)
+```
+For example:
+
+```java
+webView.hasJavascriptMethod("echoHandler", new WVJBWebView.WVJBMethodExistCallback() {
+    @Override
+    public void onResult(boolean exist) {
+        if(exist) {
+            Log.d("wvjsblog", "Javascript handler 'echoHandler' exist. ");
+        }
+    }
+});
+```
+**In Javascript**
+```javascript
+bridge.hasNativeMethod("handlerName",function responseCallback(responseData){...})
+```
+For example:
+
+```javascript
+bridge.hasNativeMethod('javaEchoToJs',function(exist){
+   if(exist){
+     console.log("Native method 'javaEchoToJs' exist! ")
+   }
+})
 ```

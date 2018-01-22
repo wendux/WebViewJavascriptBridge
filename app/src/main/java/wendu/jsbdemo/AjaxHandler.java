@@ -83,7 +83,7 @@ public class AjaxHandler {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     responseData.put("responseText",e.getMessage());
-                    handler.callback(new JSONObject(responseData).toString());
+                    handler.onResult(new JSONObject(responseData).toString());
                 }
 
                 @Override
@@ -101,13 +101,13 @@ public class AjaxHandler {
                     Map<String, List<String>> responseHeaders= response.headers().toMultimap();
                     responseHeaders.remove(null);
                     responseData.put("headers",responseHeaders);
-                    handler.callback(new JSONObject(responseData).toString());
+                    handler.onResult(new JSONObject(responseData).toString());
                 }
             });
 
         }catch (Exception e){
             responseData.put("responseText",e.getMessage());
-            handler.callback(new JSONObject(responseData).toString());
+            handler.onResult(new JSONObject(responseData).toString());
         }
     }
 }

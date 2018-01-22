@@ -23,7 +23,7 @@ public class ExampleActivity extends AppCompatActivity {
         webView.registerHandler("testJavaCallback", new WVJBWebView.WVJBHandler() {
             @Override
             public void handler(Object data, WVJBWebView.WVJBResponseCallback callback) {
-                callback.callback("Response from testJavaCallback");
+                callback.onResult("Response from testJavaCallback");
             }
         });
         testJavascriptHandlerBtn.setOnClickListener(new View.OnClickListener() {
@@ -34,7 +34,7 @@ public class ExampleActivity extends AppCompatActivity {
                 }};
                 webView.callHandler("testJavascriptHandler",new JSONObject(data) , new WVJBWebView.WVJBResponseCallback() {
                     @Override
-                    public void callback(Object data) {
+                    public void onResult(Object data) {
                         Log.d("testJavascriptHandler",data.toString());
                     }
                 });

@@ -29,7 +29,7 @@ public class EchoActivity extends AppCompatActivity {
             public void handler(Object data, WVJBWebView.WVJBResponseCallback callback) {
                 Toast.makeText(EchoActivity.this,data.toString(),LENGTH_SHORT).show();
                 Log.d("wvjsblog",data.toString());
-                callback.callback(data);
+                callback.onResult(data);
             }
         });
 
@@ -38,24 +38,31 @@ public class EchoActivity extends AppCompatActivity {
             public void onClick(View v) {
                 webView.callHandler("echoHandler", editText.getText(), new WVJBWebView.WVJBResponseCallback() {
                     @Override
-                    public void callback(Object data) {
+                    public void onResult(Object data) {
                         Toast.makeText(EchoActivity.this,data.toString(),LENGTH_SHORT).show();
                     }
                 });
             }
         });
 
-
-
         jsRcvResponseTestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 webView.callHandler("jsRcvResponseTest", "", new WVJBWebView.WVJBResponseCallback() {
                     @Override
-                    public void callback(Object data) {
+                    public void onResult(Object data) {
                         Toast.makeText(EchoActivity.this,data.toString(),LENGTH_SHORT).show();
                     }
                 });
+            }
+        });
+
+        webView.hasJavascriptMethod("echoHandler", new WVJBWebView.WVJBMethodExistCallback() {
+            @Override
+            public void onResult(boolean exist) {
+                if(exist) {
+                    Log.d("wvjsblog", "Javascript handler 'echoHandler' exist. ");
+                }
             }
         });
 

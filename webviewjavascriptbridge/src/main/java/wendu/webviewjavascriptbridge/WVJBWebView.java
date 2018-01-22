@@ -134,8 +134,13 @@ public class WVJBWebView extends WebView {
     private boolean alertboxBlock=true;
 
     public interface WVJBResponseCallback {
-        void callback(Object data);
+        void onResult(Object data);
     }
+
+    public interface WVJBMethodExistCallback {
+        void onResult(boolean exist);
+    }
+
 
     public interface WVJBHandler {
         void handler(Object data, WVJBResponseCallback callback);
@@ -158,6 +163,14 @@ public class WVJBWebView extends WebView {
         sendData(data, responseCallback, handlerName);
     }
 
+    public void hasJavascriptMethod(String handlerName, final WVJBMethodExistCallback callback){
+        callHandler("hasJavascriptMethod", handlerName, new WVJBResponseCallback() {
+            @Override
+            public void onResult(Object data) {
+                callback.onResult((boolean)data);
+            }
+        });
+    }
 
     public void registerHandler(String handlerName, WVJBHandler handler) {
         if (handlerName == null || handlerName.length() == 0 || handler == null) {
@@ -166,7 +179,7 @@ public class WVJBWebView extends WebView {
         messageHandlers.put(handlerName, handler);
     }
 
-    // send the callback message to javascript
+    // send the onResult message to javascript
     private void sendData(Object data, WVJBResponseCallback responseCallback,
                           String handlerName) {
         if (data == null && (handlerName == null || handlerName.length() == 0)) {
@@ -200,7 +213,7 @@ public class WVJBWebView extends WebView {
         evaluateJavascript(String.format("WebViewJavascriptBridge.handleMessageFromJava.apply(WebViewJavascriptBridge,[%s])", messageJSON));
     }
 
-    // handle the callback message from javascript
+    // handle the onResult message from javascript
     private void handleMessage(String info) {
         try {
             JSONObject jo = new JSONObject(info);
@@ -209,7 +222,7 @@ public class WVJBWebView extends WebView {
                 WVJBResponseCallback responseCallback = responseCallbacks
                         .remove(message.responseId);
                 if (responseCallback != null) {
-                    responseCallback.callback(message.responseData);
+                    responseCallback.onResult(message.responseData);
                 }
             } else {
                 WVJBResponseCallback responseCallback = null;
@@ -217,7 +230,7 @@ public class WVJBWebView extends WebView {
                     final String callbackId = message.callbackId;
                     responseCallback = new WVJBResponseCallback() {
                         @Override
-                        public void callback(Object data) {
+                        public void onResult(Object data) {
                             WVJBMessage msg = new WVJBMessage();
                             msg.responseId = callbackId;
                             msg.responseData = data;
@@ -314,10 +327,10 @@ public class WVJBWebView extends WebView {
         super.setWebChromeClient(mWebChromeClient);
 
         super.setWebViewClient(mWebViewClient);
-        registerHandler("hasMethod", new WVJBHandler() {
+        registerHandler("hasNativeMethod", new WVJBHandler() {
             @Override
             public void handler(Object data, WVJBResponseCallback callback) {
-                callback.callback(messageHandlers.get(data) != null);
+                callback.onResult(messageHandlers.get(data) != null);
             }
         });
         registerHandler("disableJavscriptAlertBoxSafetyTimeout", new WVJBHandler() {
