@@ -89,7 +89,7 @@ function setupWebViewJavascriptBridge(callback) {
 }
 ```
 
-5) Finally, call `setupWebViewJavascriptBridge` and then use the bridge to register handlers and call Java handlers:
+4) Finally, call `setupWebViewJavascriptBridge` and then use the bridge to register handlers and call Java handlers:
 
 ```javascript
 setupWebViewJavascriptBridge(function(bridge) {
