@@ -59,7 +59,7 @@ import java.util.Map;
 
 public class WVJBWebView extends WebView {
     private static final String BRIDGE_NAME = "WVJBInterface";
-    private String APP_CACAHE_DIRNAME;
+    private String APP_CACHE_DIRNAME;
     private static final int EXEC_SCRIPT = 1;
     private static final int LOAD_URL = 2;
     private static final int LOAD_URL_WITH_HEADERS = 3;
@@ -308,7 +308,7 @@ public class WVJBWebView extends WebView {
     @Keep
     void init() {
         mainThreadHandler = new MyHandler((Activity) getContext());
-        APP_CACAHE_DIRNAME = getContext().getFilesDir().getAbsolutePath() + "/webcache";
+        APP_CACHE_DIRNAME = getContext().getFilesDir().getAbsolutePath() + "/webcache";
         this.responseCallbacks = new HashMap<>();
         this.messageHandlers = new HashMap<>();
         this.startupMessageQueue = new ArrayList<>();
@@ -316,21 +316,17 @@ public class WVJBWebView extends WebView {
         settings.setDomStorageEnabled(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             CookieManager.getInstance().setAcceptThirdPartyCookies(this, true);
+            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
         settings.setAllowFileAccess(false);
         settings.setAppCacheEnabled(false);
-        settings.setSavePassword(false);
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         settings.setJavaScriptEnabled(true);
         settings.setLoadWithOverviewMode(true);
         settings.setSupportMultipleWindows(true);
-        settings.setAppCachePath(APP_CACAHE_DIRNAME);
-        if (Build.VERSION.SDK_INT >= 21) {
-            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-        }
+        settings.setAppCachePath(APP_CACHE_DIRNAME);
         settings.setUseWideViewPort(true);
         super.setWebChromeClient(mWebChromeClient);
-
         super.setWebViewClient(mWebViewClient);
         registerHandler("hasNativeMethod", new WVJBHandler() {
             @Override
@@ -425,7 +421,6 @@ public class WVJBWebView extends WebView {
     public void setWebViewClient(WebViewClient client) {
         webViewClient = client;
     }
-
 
     private WebChromeClient mWebChromeClient = new WebChromeClient() {
 
@@ -992,8 +987,5 @@ public class WVJBWebView extends WebView {
             }
         }
     };
-
-
-
 
 }
