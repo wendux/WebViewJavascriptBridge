@@ -146,7 +146,7 @@ public class WVJBWebView extends WebView {
         void handler(Object data, WVJBResponseCallback callback);
     }
 
-    public void disableJavscriptAlertBoxSafetyTimeout(boolean disable){
+    public void disableJavascriptAlertBoxSafetyTimeout(boolean disable){
         alertboxBlock=!disable;
     }
 
@@ -163,6 +163,11 @@ public class WVJBWebView extends WebView {
         sendData(data, responseCallback, handlerName);
     }
 
+    /**
+     * Test whether the handler exist in javascript
+     * @param handlerName
+     * @param callback
+     */
     public void hasJavascriptMethod(String handlerName, final WVJBMethodExistCallback callback){
         callHandler("hasJavascriptMethod", handlerName, new WVJBResponseCallback() {
             @Override
@@ -333,10 +338,10 @@ public class WVJBWebView extends WebView {
                 callback.onResult(messageHandlers.get(data) != null);
             }
         });
-        registerHandler("disableJavscriptAlertBoxSafetyTimeout", new WVJBHandler() {
+        registerHandler("disableJavascriptAlertBoxSafetyTimeout", new WVJBHandler() {
             @Override
             public void handler(Object data, WVJBResponseCallback callback) {
-                disableJavscriptAlertBoxSafetyTimeout((boolean)data);
+                disableJavascriptAlertBoxSafetyTimeout((boolean)data);
             }
         });
         super.addJavascriptInterface(new Object() {
@@ -351,6 +356,59 @@ public class WVJBWebView extends WebView {
 
         }, BRIDGE_NAME);
 
+    }
+
+    private void _evaluateJavascript(String script) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            WVJBWebView.super.evaluateJavascript(script, null);
+        } else {
+            loadUrl("javascript:" + script);
+        }
+    }
+
+    /**
+     * This method can be called in any thread, and if it is not called in the main thread,
+     * it will be automatically distributed to the main thread.
+     * @param script
+     */
+    public void evaluateJavascript(final String script) {
+        if (Looper.getMainLooper() == Looper.myLooper()) {
+            _evaluateJavascript(script);
+        } else {
+            Message msg = new Message();
+            msg.what = EXEC_SCRIPT;
+            msg.obj = script;
+            mainThreadHandler.sendMessage(msg);
+        }
+    }
+
+
+    /**
+     * This method can be called in any thread, and if it is not called in the main thread,
+     * it will be automatically distributed to the main thread.
+     * @param url
+     */
+    @Override
+    public void loadUrl(String url) {
+        Message msg = new Message();
+        msg.what = LOAD_URL;
+        msg.obj = url;
+        mainThreadHandler.sendMessage(msg);
+    }
+
+
+    /**
+     * This method can be called in any thread, and if it is not called in the main thread,
+     * it will be automatically distributed to the main thread.
+     * @param url
+     * @param additionalHttpHeaders
+     */
+    @Override
+    public void loadUrl(String url, Map<String, String> additionalHttpHeaders) {
+        Message msg = new Message();
+        msg.what = LOAD_URL_WITH_HEADERS;
+        msg.obj = new RequestInfo(url, additionalHttpHeaders);
+        mainThreadHandler.sendMessage(msg);
     }
 
 
@@ -935,39 +993,7 @@ public class WVJBWebView extends WebView {
         }
     };
 
-    private void _evaluateJavascript(String script) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            WVJBWebView.super.evaluateJavascript(script, null);
-        } else {
-            loadUrl("javascript:" + script);
-        }
-    }
-
-    public void evaluateJavascript(final String script) {
-        if (Looper.getMainLooper() == Looper.myLooper()) {
-            _evaluateJavascript(script);
-        } else {
-            Message msg = new Message();
-            msg.what = EXEC_SCRIPT;
-            msg.obj = script;
-            mainThreadHandler.sendMessage(msg);
-        }
-    }
 
 
-    @Override
-    public void loadUrl(String url) {
-        Message msg = new Message();
-        msg.what = LOAD_URL;
-        msg.obj = url;
-        mainThreadHandler.sendMessage(msg);
-    }
 
-    @Override
-    public void loadUrl(String url, Map<String, String> additionalHttpHeaders) {
-        Message msg = new Message();
-        msg.what = LOAD_URL_WITH_HEADERS;
-        msg.obj = new RequestInfo(url, additionalHttpHeaders);
-        mainThreadHandler.sendMessage(msg);
-    }
 }

@@ -22,8 +22,6 @@ public class EchoActivity extends AppCompatActivity {
         final EditText editText= (EditText) findViewById(R.id.edit);
         Button  echoHandlerBtn= (Button) findViewById(R.id.echoHandlerBtn);
         Button jsRcvResponseTestBtn= (Button) findViewById(R.id.jsRcvResponseTestBtn);
-        webView.loadUrl("file:///android_asset/echo.html");
-
         webView.registerHandler("javaEchoToJs", new WVJBWebView.WVJBHandler() {
             @Override
             public void handler(Object data, WVJBWebView.WVJBResponseCallback callback) {
@@ -65,6 +63,8 @@ public class EchoActivity extends AppCompatActivity {
                 }
             }
         });
+
+        webView.loadUrl("file:///android_asset/echo.html");
 
     }
 }

@@ -155,13 +155,13 @@ webview.callHandler("getCurrentPageUrl", null, new WVJBWebView.WVJBResponseCallb
                   
 ```
 
-##### `webview.disableJavscriptAlertBoxSafetyTimeout(bool disable)`
+##### `webview.disableJavascriptAlertBoxSafetyTimeout(bool disable)`
 
 UNSAFE. Speed up bridge message passing by disabling the setTimeout safety check. It is only safe to disable this safety check if you do not call any of the javascript popup box functions (alert, confirm, and prompt). If you call any of these functions from the bridged javascript code, the app will hang.
 
 Example:
 
-	webview.disableJavscriptAlertBoxSafetyTimeout(true);
+	webview.disableJavascriptAlertBoxSafetyTimeout(true);
 
 
 
@@ -196,17 +196,17 @@ bridge.callHandler("getScreenHeight", null, function(response) {
 ```
 
 
-##### `bridge.disableJavscriptAlertBoxSafetyTimeout(...)`
+##### `bridge.disableJavascriptAlertBoxSafetyTimeout(...)`
 
-Calling `bridge.disableJavscriptAlertBoxSafetyTimeout(...)` has the same effect as calling `webview disableJavscriptAlertBoxSafetyTimeout(...)` in Java.
+Calling `bridge.disableJavascriptAlertBoxSafetyTimeout(...)` has the same effect as calling `webview disableJavscriptAlertBoxSafetyTimeout(...)` in Java.
 
 Example:
 
 ```javascript
 //disable
-bridge.disableJavscriptAlertBoxSafetyTimeout()
+bridge.disableJavascriptAlertBoxSafetyTimeout()
 //enable
-bridge.disableJavscriptAlertBoxSafetyTimeout(false)
+bridge.disableJavascriptAlertBoxSafetyTimeout(false)
 ```
 
 

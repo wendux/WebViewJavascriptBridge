@@ -30,7 +30,7 @@
             _doSend({handlerName: handlerName, data: data}, responseCallback);
         },
         disableJavscriptAlertBoxSafetyTimeout: function (disable) {
-            this.callHandler("disableJavscriptAlertBoxSafetyTimeout",disable!==false)
+            this.callHandler("disableJavascriptAlertBoxSafetyTimeout",disable!==false)
         },
         handleMessageFromJava: function (messageJSON) {
             _dispatchMessageFromJava(messageJSON); 
