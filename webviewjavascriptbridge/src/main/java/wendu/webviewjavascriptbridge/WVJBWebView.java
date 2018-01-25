@@ -65,19 +65,21 @@ public class WVJBWebView extends WebView {
     private static final int LOAD_URL_WITH_HEADERS = 3;
     private static final int HANDLE_MESSAGE = 4;
     MyHandler mainThreadHandler = null;
+    private JavascriptCloseWindowListener javascriptCloseWindowListener=null;
+
 
     class MyHandler extends Handler {
         //  Using WeakReference to avoid memory leak
-        WeakReference<Activity> mActivityReference;
+        WeakReference<Context> mContextReference;
 
-        MyHandler(Activity activity) {
-            mActivityReference = new WeakReference<>(activity);
+        MyHandler(Context context) {
+            mContextReference = new WeakReference<>(context);
         }
 
         @Override
         public void handleMessage(Message msg) {
-            final Activity activity = mActivityReference.get();
-            if (activity != null) {
+            final Context context = mContextReference.get();
+            if (context != null) {
                 switch (msg.what) {
                     case EXEC_SCRIPT:
                         _evaluateJavascript((String) msg.obj);
@@ -142,6 +144,14 @@ public class WVJBWebView extends WebView {
     }
 
 
+    public interface JavascriptCloseWindowListener {
+        /**
+         * @return  If true, close the current activity, otherwise, do nothing.
+         */
+        boolean onClose();
+    }
+
+
     public interface WVJBHandler {
         void handler(Object data, WVJBResponseCallback callback);
     }
@@ -169,12 +179,19 @@ public class WVJBWebView extends WebView {
      * @param callback
      */
     public void hasJavascriptMethod(String handlerName, final WVJBMethodExistCallback callback){
-        callHandler("hasJavascriptMethod", handlerName, new WVJBResponseCallback() {
+        callHandler("_hasJavascriptMethod", handlerName, new WVJBResponseCallback() {
             @Override
             public void onResult(Object data) {
                 callback.onResult((boolean)data);
             }
         });
+    }
+
+    /**
+     * set a listener for javascript closing the current activity.
+     */
+    public void setJavascriptCloseWindowListener( JavascriptCloseWindowListener listener){
+        javascriptCloseWindowListener=listener;
     }
 
     public void registerHandler(String handlerName, WVJBHandler handler) {
@@ -195,7 +212,7 @@ public class WVJBWebView extends WebView {
             message.data = data;
         }
         if (responseCallback != null) {
-            String callbackId = "objc_cb_" + (++uniqueId);
+            String callbackId = "java_cb_" + (++uniqueId);
             responseCallbacks.put(callbackId, responseCallback);
             message.callbackId = callbackId;
         }
@@ -307,7 +324,7 @@ public class WVJBWebView extends WebView {
 
     @Keep
     void init() {
-        mainThreadHandler = new MyHandler((Activity) getContext());
+        mainThreadHandler = new MyHandler(getContext());
         APP_CACHE_DIRNAME = getContext().getFilesDir().getAbsolutePath() + "/webcache";
         this.responseCallbacks = new HashMap<>();
         this.messageHandlers = new HashMap<>();
@@ -328,13 +345,23 @@ public class WVJBWebView extends WebView {
         settings.setUseWideViewPort(true);
         super.setWebChromeClient(mWebChromeClient);
         super.setWebViewClient(mWebViewClient);
-        registerHandler("hasNativeMethod", new WVJBHandler() {
+
+        registerHandler("_hasNativeMethod", new WVJBHandler() {
             @Override
             public void handler(Object data, WVJBResponseCallback callback) {
                 callback.onResult(messageHandlers.get(data) != null);
             }
         });
-        registerHandler("disableJavascriptAlertBoxSafetyTimeout", new WVJBHandler() {
+        registerHandler("_closePage", new WVJBHandler() {
+            @Override
+            public void handler(Object data, WVJBResponseCallback callback) {
+                if(javascriptCloseWindowListener==null
+                        ||javascriptCloseWindowListener.onClose()){
+                    ((Activity) getContext()).onBackPressed();
+                }
+            }
+        });
+        registerHandler("_disableJavascriptAlertBoxSafetyTimeout", new WVJBHandler() {
             @Override
             public void handler(Object data, WVJBResponseCallback callback) {
                 disableJavascriptAlertBoxSafetyTimeout((boolean)data);

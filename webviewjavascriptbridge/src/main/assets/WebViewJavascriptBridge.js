@@ -1,4 +1,5 @@
-;(function () {
+;
+(function () {
     if (window.WebViewJavascriptBridge) {
         return;
     }
@@ -16,8 +17,8 @@
         }
         window.WVJBInterface && WVJBInterface.notice(JSON.stringify(message || {}));
     }
-    
-    var bridge= {
+
+    var bridge = {
         registerHandler: function (handlerName, handler) {
             messageHandlers[handlerName] = handler;
         },
@@ -27,51 +28,54 @@
                 responseCallback = data;
                 data = null;
             }
-            _doSend({handlerName: handlerName, data: data}, responseCallback);
+            _doSend({
+                handlerName: handlerName,
+                data: data
+            }, responseCallback);
         },
         disableJavscriptAlertBoxSafetyTimeout: function (disable) {
-            this.callHandler("disableJavascriptAlertBoxSafetyTimeout",disable!==false)
+            this.callHandler("_disableJavascriptAlertBoxSafetyTimeout", disable !== false)
         },
         handleMessageFromJava: function (messageJSON) {
-            _dispatchMessageFromJava(messageJSON); 
+            _dispatchMessageFromJava(messageJSON);
         },
-        hasNativeMethod:function(name,responseCallback){
-         this.callHandler('hasNativeMethod',name,responseCallback);
+        hasNativeMethod: function (name, responseCallback) {
+            this.callHandler('_hasNativeMethod', name, responseCallback);
         }
     };
 
-    bridge.registerHandler('hasJavascriptMethod',function(data,responseCallback){
-      responseCallback(!!messageHandlers[data])
+    bridge.registerHandler('_hasJavascriptMethod', function (data, responseCallback) {
+        responseCallback(!!messageHandlers[data])
     })
 
     function _dispatchMessageFromJava(message) {
-            var messageHandler;
-            var responseCallback;
-            if (message.responseId) {
-                responseCallback = responseCallbacks[message.responseId];
-                if (!responseCallback) {
-                    return;
-                }
-                responseCallback(message.responseData);
-                delete responseCallbacks[message.responseId];
-            } else {
-                if (message.callbackId) {
-                    var callbackResponseId = message.callbackId;
-                    responseCallback = function (responseData) {
-                        _doSend({
-                            handlerName: message.handlerName,
-                            responseId: callbackResponseId,
-                            responseData: responseData
-                        });
-                    };
-                }
-                var handler = messageHandlers[message.handlerName];
-                if (!handler) {
-                    console.log("WebViewJavascriptBridge: WARNING: no handler for message from java", message);
-                } else {
-                    handler(message.data, responseCallback);
-                }
+        var messageHandler;
+        var responseCallback;
+        if (message.responseId) {
+            responseCallback = responseCallbacks[message.responseId];
+            if (!responseCallback) {
+                return;
             }
+            responseCallback(message.responseData);
+            delete responseCallbacks[message.responseId];
+        } else {
+            if (message.callbackId) {
+                var callbackResponseId = message.callbackId;
+                responseCallback = function (responseData) {
+                    _doSend({
+                        handlerName: message.handlerName,
+                        responseId: callbackResponseId,
+                        responseData: responseData
+                    });
+                };
+            }
+            var handler = messageHandlers[message.handlerName];
+            if (!handler) {
+                console.log("WebViewJavascriptBridge: WARNING: no handler for message from java", message);
+            } else {
+                handler(message.data, responseCallback);
+            }
+        }
     }
 
     var callbacks = window.WVJBCallbacks;
@@ -81,5 +85,10 @@
             callbacks[i](bridge);
         }
     }
-    window.WebViewJavascriptBridge=bridge;
+    window.WebViewJavascriptBridge = bridge;
+
+    window.close=function(){
+      bridge.callHandler("_closePage")
+    }
+
 })();

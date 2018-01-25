@@ -2,7 +2,7 @@
 <html>
 <head lang="zh-cmn-Hans">
     <meta charset="UTF-8">
-    <title>dsBridge Test</title>
+    <title></title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"/>
@@ -40,8 +40,8 @@
 <div class="btn" id="fly-ajax">Get home page source code of baidu.com</div>
 <div class="btn" id="git-cat">Show the logo of github </div>
 <div style="text-align:center"><img id="img"></div>
+<div class="btn" onclick="window.close()">Close window</div>
 <script>
-
     function setupWebViewJavascriptBridge(onResult) {
         if (window.WebViewJavascriptBridge) { return onResult(WebViewJavascriptBridge); }
         if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(onResult); }
@@ -70,11 +70,16 @@
      })
 
      addClick("git-cat",function(){
+         var img=document.getElementById("img")
+         var btn=document.getElementById("git-cat")
+         img.src="";
+         btn.innerText="loading..."
          fly.get("https://assets-cdn.github.com/favicon.ico", null,{
             responseType:"stream"
           }).then(function (d) {
-           //base64
-           document.getElementById("img").src=d.data;
+           //data is encoded with base64
+           img.src=d.data;
+           btn.innerText="look!"
          })
      })
 
