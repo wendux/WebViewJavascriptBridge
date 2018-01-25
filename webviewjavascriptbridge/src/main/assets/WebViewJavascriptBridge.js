@@ -33,7 +33,7 @@
                 data: data
             }, responseCallback);
         },
-        disableJavscriptAlertBoxSafetyTimeout: function (disable) {
+        disableJavascriptAlertBoxSafetyTimeout: function (disable) {
             this.callHandler("_disableJavascriptAlertBoxSafetyTimeout", disable !== false)
         },
         handleMessageFromJava: function (messageJSON) {
