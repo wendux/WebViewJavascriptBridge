@@ -222,7 +222,8 @@ public class WVJBWebView extends WebView {
         queueMessage(message);
     }
 
-    private void queueMessage(WVJBMessage message) {
+    private synchronized void queueMessage(WVJBMessage message) {
+
         if (startupMessageQueue != null) {
             startupMessageQueue.add(message);
         } else {
@@ -232,7 +233,7 @@ public class WVJBWebView extends WebView {
 
     private void dispatchMessage(WVJBMessage message) {
         String messageJSON = message2JSONObject(message).toString();
-        evaluateJavascript(String.format("WebViewJavascriptBridge.handleMessageFromJava.apply(WebViewJavascriptBridge,[%s])", messageJSON));
+        evaluateJavascript(String.format("WebViewJavascriptBridge._handleMessageFromJava(%s)", messageJSON));
     }
 
     // handle the onResult message from javascript
@@ -820,11 +821,13 @@ public class WVJBWebView extends WebView {
                 e.printStackTrace();
             }
 
-            if (startupMessageQueue != null) {
-                for (int i = 0; i < startupMessageQueue.size(); i++) {
-                    dispatchMessage(startupMessageQueue.get(i));
+            synchronized(WVJBWebView.this) {
+                if (startupMessageQueue != null) {
+                    for (int i = 0; i < startupMessageQueue.size(); i++) {
+                        dispatchMessage(startupMessageQueue.get(i));
+                    }
+                    startupMessageQueue = null;
                 }
-                startupMessageQueue = null;
             }
 
             if (webViewClient != null) {

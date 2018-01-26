@@ -36,7 +36,7 @@
         disableJavascriptAlertBoxSafetyTimeout: function (disable) {
             this.callHandler("_disableJavascriptAlertBoxSafetyTimeout", disable !== false)
         },
-        handleMessageFromJava: function (messageJSON) {
+        _handleMessageFromJava: function (messageJSON) {
             _dispatchMessageFromJava(messageJSON);
         },
         hasNativeMethod: function (name, responseCallback) {
