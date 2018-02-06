@@ -1,15 +1,19 @@
 WebViewJavascriptBridge
 =======================
 
-[![](https://jitpack.io/v/wendux/WebViewJavascriptBridge.svg)](https://jitpack.io/#wendux/WebViewJavascriptBridge)   [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://opensource.org/licenses/mit-license.php) [![](https://travis-ci.org/wendux/WebViewJavascriptBridge.svg?branch=master)](https://travis-ci.org/wendux/WebViewJavascriptBridge)
+[![](https://jitpack.io/v/wendux/WebViewJavascriptBridge.svg)](https://jitpack.io/#wendux/WebViewJavascriptBridge)  ![language](https://img.shields.io/badge/language-Java-yellow.svg)  [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://opensource.org/licenses/mit-license.php) [![](https://travis-ci.org/wendux/WebViewJavascriptBridge.svg?branch=master)](https://travis-ci.org/wendux/WebViewJavascriptBridge) ![](https://img.shields.io/badge/minSdkVersion-17-yellow.svg) [![GitHub last commit](https://img.shields.io/github/last-commit/google/skia.svg?color=blue)]()
 
 
-An  **Android**  bridge for sending messages between Java and JavaScript in WebView. and It is a mirror of [marcuswestin/WebViewJavascriptBridge](https://github.com/marcuswestin/WebViewJavascriptBridge) which supports IOS platforms.
+An  **Android**  bridge for sending messages between Java and JavaScript in WebView. and It is a mirror of [marcuswestin/WebViewJavascriptBridge](https://github.com/marcuswestin/WebViewJavascriptBridge) (object-c) and [Lision/WKWebViewJavascriptBridge](https://github.com/Lision/WKWebViewJavascriptBridge)(swift) which supports IOS platforms.
 
 Introduction
 ---------------
 
- This Android version project is a mirror of [marcuswestin/WebViewJavascriptBridge](https://github.com/marcuswestin/WebViewJavascriptBridge) ,  so there are some similarities between the two project , such as  API design, native code, and the Javascript code is exactly the same.
+ This Android version project is a mirror of [marcuswestin/WebViewJavascriptBridge](https://github.com/marcuswestin/WebViewJavascriptBridge) (object-c) and [Lision/WKWebViewJavascriptBridge](https://github.com/Lision/WKWebViewJavascriptBridge)(swift),  so there are some similarities between the two project , such as  API design, native code, and the Javascript code is exactly the same.
+
+## Notice
+
+If you are a new user, I strongly suggest that you use [DSBridge](https://github.com/wendux/DSBridge-Android) instead.  [DSBridge](https://github.com/wendux/DSBridge-Android) is  a modern cross-platform Javascript bridge, it  is more powerful than WebViewJavascriptBridge. 
 
 Installation 
 ------------------------
@@ -251,3 +255,9 @@ bridge.hasNativeMethod('javaEchoToJs',function(exist){
    }
 })
 ```
+## Compare with DSBridge
+
+[DSBridge](https://github.com/wendux/DSBridge-Android) is  a modern cross-platform JavaScript bridge, through which you can invoke each other's functions synchronously or asynchronously between JavaScript and native applications. On the whole, [DSBridge](https://github.com/wendux/DSBridge-Android)  is more powerful than WebViewJavascriptBridge.  If you are a new user, I strongly suggest that you use DSBridge instead. More details please rerfer to https://github.com/wendux/DSBridge-Android .
+
+
+
