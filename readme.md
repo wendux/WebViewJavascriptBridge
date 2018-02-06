@@ -88,8 +88,10 @@ function setupWebViewJavascriptBridge(callback) {
 	if (callbacks) { return callbacks.push(callback); }
 	window.WVJBCallbacks=window.WKWVJBCallbacks = [callback];
 	if(window.WKWVJBCallbacks){
+	  //for https://github.com/Lision/WKWebViewJavascriptBridge
 	  window.webkit.messageHandlers.iOS_Native_InjectJavascript.postMessage(null)
 	}else{
+	    //for https://github.com/marcuswestin/WebViewJavascriptBridge
         var WVJBIframe = document.createElement('iframe');
         WVJBIframe.style.display = 'none';
         WVJBIframe.src = 'https://__bridge_loaded__';

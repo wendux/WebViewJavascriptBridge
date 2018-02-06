@@ -42,16 +42,22 @@
 <div style="text-align:center"><img id="img"></div>
 <div class="btn" onclick="window.close()">Close window</div>
 <script>
-    function setupWebViewJavascriptBridge(onResult) {
-        if (window.WebViewJavascriptBridge) { return onResult(WebViewJavascriptBridge); }
-        if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(onResult); }
-        window.WVJBCallbacks = [onResult];
-        var WVJBIframe = document.createElement('iframe');
-        WVJBIframe.style.display = 'none';
-        WVJBIframe.src = 'https://__bridge_loaded__';
-        document.documentElement.appendChild(WVJBIframe);
-        setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0)
-    }
+	function setupWebViewJavascriptBridge(callback) {
+		var bridge=window.WebViewJavascriptBridge||window.WKWebViewJavascriptBridge
+		if (bridge) { return callback(bridge); }
+		var callbacks=window.WVJBCallbacks||window.WKWVJBCallbacks
+		if (callbacks) { return callbacks.push(callback); }
+		window.WVJBCallbacks=window.WKWVJBCallbacks = [callback];
+		if(window.WKWVJBCallbacks){
+		  window.webkit.messageHandlers.iOS_Native_InjectJavascript.postMessage(null)
+		}else{
+			var WVJBIframe = document.createElement('iframe');
+			WVJBIframe.style.display = 'none';
+			WVJBIframe.src = 'https://__bridge_loaded__';
+			document.documentElement.appendChild(WVJBIframe);
+			setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0)
+		}
+	}
 
     function addClick(id,onResult){
       document.getElementById(id).addEventListener("click",onResult);
