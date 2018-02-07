@@ -135,8 +135,8 @@ public class WVJBWebView extends WebView {
     private long uniqueId = 0;
     private boolean alertboxBlock=true;
 
-    public interface WVJBResponseCallback {
-        void onResult(Object data);
+    public interface WVJBResponseCallback<T> {
+        void onResult(T data);
     }
 
     public interface WVJBMethodExistCallback {
@@ -152,8 +152,8 @@ public class WVJBWebView extends WebView {
     }
 
 
-    public interface WVJBHandler {
-        void handler(Object data, WVJBResponseCallback callback);
+    public interface WVJBHandler<T,R> {
+        void handler(T data, WVJBResponseCallback<R> callback);
     }
 
     public void disableJavascriptAlertBoxSafetyTimeout(boolean disable){
@@ -164,12 +164,12 @@ public class WVJBWebView extends WebView {
         callHandler(handlerName, null, null);
     }
 
-    public void callHandler(String handlerName, Object data) {
+    public  void callHandler(String handlerName, Object data) {
         callHandler(handlerName, data, null);
     }
 
-    public void callHandler(String handlerName, Object data,
-                            WVJBResponseCallback responseCallback) {
+    public  <T> void callHandler(String handlerName, Object data,
+                            WVJBResponseCallback<T> responseCallback) {
         sendData(data, responseCallback, handlerName);
     }
 
@@ -194,7 +194,7 @@ public class WVJBWebView extends WebView {
         javascriptCloseWindowListener=listener;
     }
 
-    public void registerHandler(String handlerName, WVJBHandler handler) {
+    public <T,R> void registerHandler(String handlerName, WVJBHandler<T,R> handler) {
         if (handlerName == null || handlerName.length() == 0 || handler == null) {
             return;
         }

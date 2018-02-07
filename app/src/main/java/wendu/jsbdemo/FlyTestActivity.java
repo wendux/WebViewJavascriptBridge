@@ -14,10 +14,10 @@ public class FlyTestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fly_test);
         final WVJBWebView webView = (WVJBWebView) findViewById(R.id.webview);
-        webView.registerHandler("onAjaxRequest", new WVJBWebView.WVJBHandler() {
+        webView.registerHandler("onAjaxRequest", new WVJBWebView.WVJBHandler<JSONObject,String>() {
             @Override
-            public void handler(Object data, WVJBWebView.WVJBResponseCallback callback) {
-                AjaxHandler.onAjaxRequest((JSONObject) data, callback);
+            public void handler(JSONObject data, WVJBWebView.WVJBResponseCallback<String> callback) {
+                AjaxHandler.onAjaxRequest(data, callback);
             }
         });
         webView.loadUrl("file:///android_asset/fly.html");

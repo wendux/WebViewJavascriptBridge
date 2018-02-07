@@ -29,7 +29,7 @@ import wendu.webviewjavascriptbridge.WVJBWebView;
  */
 
 public class AjaxHandler {
-    public static void onAjaxRequest(final JSONObject requestData, final WVJBWebView.WVJBResponseCallback handler){
+    public static void onAjaxRequest(final JSONObject requestData, final WVJBWebView.WVJBResponseCallback<String> handler){
         final Map<String, Object> responseData=new HashMap<>();
         responseData.put("statusCode",0);
 
