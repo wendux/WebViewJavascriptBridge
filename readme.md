@@ -1,21 +1,20 @@
 WebViewJavascriptBridge
 =======================
 
-[![](https://jitpack.io/v/wendux/WebViewJavascriptBridge.svg)](https://jitpack.io/#wendux/WebViewJavascriptBridge)  ![language](https://img.shields.io/badge/language-Java-yellow.svg)  [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://opensource.org/licenses/mit-license.php) [![](https://travis-ci.org/wendux/WebViewJavascriptBridge.svg?branch=master)](https://travis-ci.org/wendux/WebViewJavascriptBridge) ![](https://img.shields.io/badge/minSdkVersion-17-yellow.svg) [![GitHub last commit](https://img.shields.io/github/last-commit/google/skia.svg?color=blue)]()
-
+[![](https://jitpack.io/v/wendux/WebViewJavascriptBridge.svg)](https://jitpack.io/#wendux/WebViewJavascriptBridge) ![language](https://img.shields.io/badge/language-Java-yellow.svg) [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://opensource.org/licenses/mit-license.php) [![](https://travis-ci.org/wendux/WebViewJavascriptBridge.svg?branch=master)](https://travis-ci.org/wendux/WebViewJavascriptBridge) ![](https://img.shields.io/badge/minSdkVersion-17-yellow.svg) [![GitHub last commit](https://img.shields.io/github/last-commit/google/skia.svg?color=blue)]()
 
 An  **Android**  bridge for sending messages between Java and JavaScript in WebView. and It is a mirror of [marcuswestin/WebViewJavascriptBridge](https://github.com/marcuswestin/WebViewJavascriptBridge) (object-c) and [Lision/WKWebViewJavascriptBridge](https://github.com/Lision/WKWebViewJavascriptBridge)(swift) which supports IOS platforms.
 
 Introduction
 ---------------
 
- This Android version project is a mirror of [marcuswestin/WebViewJavascriptBridge](https://github.com/marcuswestin/WebViewJavascriptBridge) (object-c) and [Lision/WKWebViewJavascriptBridge](https://github.com/Lision/WKWebViewJavascriptBridge)(swift),  so there are some similarities between the two project , such as  API design, native code, and the Javascript code is exactly the same.
+This Android version project is a mirror of [marcuswestin/WebViewJavascriptBridge](https://github.com/marcuswestin/WebViewJavascriptBridge) (object-c) and [Lision/WKWebViewJavascriptBridge](https://github.com/Lision/WKWebViewJavascriptBridge)(swift), so there are some similarities between the two project , such as API design, native code, and the Javascript code is exactly the same.
 
 ## Notice
 
-If you are a new user, I strongly suggest that you use [DSBridge](https://github.com/wendux/DSBridge-Android) instead.  [DSBridge](https://github.com/wendux/DSBridge-Android) is  a modern cross-platform Javascript bridge, it  is more powerful than WebViewJavascriptBridge. 
+If you are a new user, I strongly suggest that you use [DSBridge](https://github.com/wendux/DSBridge-Android) instead. [DSBridge](https://github.com/wendux/DSBridge-Android) is a modern cross-platform Javascript bridge, it is more powerful than WebViewJavascriptBridge.
 
-Installation 
+Installation
 ------------------------
 
 1. Add the JitPack repository to your build file
@@ -23,8 +22,8 @@ Installation
    ```java
    allprojects {
      repositories {
-      ...
-      maven { url 'https://jitpack.io' }
+       ...
+       maven { url 'https://jitpack.io' }
      }
    }
    ```
@@ -33,7 +32,7 @@ Installation
 
    ```java
    dependencies {
-   	compile 'com.github.wendux:WebViewJavascriptBridge:master-SNAPSHOT'
+     compile 'com.github.wendux:WebViewJavascriptBridge:master-SNAPSHOT'
    }
    ```
 
@@ -56,7 +55,7 @@ import wendu.webviewjavascriptbridge.WVJBWebView
 ...
 
 ```java
-WVJBWebView webView= (WVJBWebView) findViewById(R.id.webview);
+WVJBWebView webView = (WVJBWebView) findViewById(R.id.webview);
 ```
 
 2) Register a handler in Java, and call a JS handler:
@@ -64,39 +63,39 @@ WVJBWebView webView= (WVJBWebView) findViewById(R.id.webview);
 ```objc
 webView.registerHandler("Java Echo", new WVJBWebView.WVJBHandler() {
   @Override
-    public void handler(Object data, WVJBWebView.WVJBResponseCallback callback) {
-    Log.d("wvjsblog","Java Echo called with: "+data.toString());
+  public void handler(Object data, WVJBWebView.WVJBResponseCallback callback) {
+    Log.d("wvjsblog", "Java Echo called with: "+data.toString());
     callback.onResult(data);
   }
 });
 
 webView.callHandler("JS Echo", null, new WVJBWebView.WVJBResponseCallback() {
   @Override
-    public void onResult(Object data) {
-     Log.d("wvjsblog","Java received response: "+data.toString());
-    }
+  public void onResult(Object data) {
+    Log.d("wvjsblog", "Java received response: "+data.toString());
+  }
 });
 ```
 
 3) Copy and paste `setupWebViewJavascriptBridge` into your JS:
-​	
+
 ```javascript
 function setupWebViewJavascriptBridge(callback) {
-    var bridge=window.WebViewJavascriptBridge||window.WKWebViewJavascriptBridge
-	if (bridge) { return callback(bridge); }
-	var callbacks=window.WVJBCallbacks||window.WKWVJBCallbacks
-	if (callbacks) { return callbacks.push(callback); }
-	window.WVJBCallbacks=window.WKWVJBCallbacks = [callback];
-	if(window.WKWVJBCallbacks){
-	  //for https://github.com/Lision/WKWebViewJavascriptBridge
-	  window.webkit.messageHandlers.iOS_Native_InjectJavascript.postMessage(null)
-	}else{
-	    //for https://github.com/marcuswestin/WebViewJavascriptBridge
-        var WVJBIframe = document.createElement('iframe');
-        WVJBIframe.style.display = 'none';
-        WVJBIframe.src = 'https://__bridge_loaded__';
-        document.documentElement.appendChild(WVJBIframe);
-        setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0)
+  var bridge = window.WebViewJavascriptBridge || window.WKWebViewJavascriptBridge;
+  if (bridge) { return callback(bridge); }
+  var callbacks = window.WVJBCallbacks || window.WKWVJBCallbacks;
+  if (callbacks) { return callbacks.push(callback); }
+  window.WVJBCallbacks = window.WKWVJBCallbacks = [callback];
+  if (window.WKWVJBCallbacks) {
+    //for https://github.com/Lision/WKWebViewJavascriptBridge
+    window.webkit.messageHandlers.iOS_Native_InjectJavascript.postMessage(null);
+  } else {
+    //for https://github.com/marcuswestin/WebViewJavascriptBridge
+    var WVJBIframe = document.createElement('iframe');
+    WVJBIframe.style.display = 'none';
+    WVJBIframe.src = 'https://__bridge_loaded__';
+    document.documentElement.appendChild(WVJBIframe);
+    setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0);
 	}
 }
 ```
@@ -105,17 +104,17 @@ function setupWebViewJavascriptBridge(callback) {
 
 ```javascript
 setupWebViewJavascriptBridge(function(bridge) {
-	
-	/* Initialize your app here */
 
-	bridge.registerHandler('JS Echo', function(data, responseCallback) {
-		console.log("JS Echo called with:", data)
-		responseCallback(data)
-	})
-	bridge.callHandler('Java Echo', {'key':'value'}, function responseCallback(responseData) {
-		console.log("JS received response:", responseData)
-	})
-})
+  /* Initialize your app here */
+
+  bridge.registerHandler('JS Echo', function(data, responseCallback) {
+    console.log("JS Echo called with:", data);
+    responseCallback(data);
+  });
+  bridge.callHandler('Java Echo', {'key': 'value'}, function responseCallback(responseData) {
+    console.log("JS received response:", responseData);
+  });
+});
 ```
 
 API Reference
@@ -123,9 +122,7 @@ API Reference
 
 ### Java API
 
-
 ##### `webview.registerHandler(String handlerName, WVJBHandler handler);`
-
 
 Register a handler called `handlerName`. The javascript can then call this handler with `WebViewJavascriptBridge.callHandler("handlerName")`.
 
@@ -134,17 +131,17 @@ Example:
 ```objc
 webView.registerHandler("getScreenHeight", new WVJBWebView.WVJBHandler() {
   @Override
-    public void handler(Object data, WVJBWebView.WVJBResponseCallback callback) {
+  public void handler(Object data, WVJBWebView.WVJBResponseCallback callback) {
     //wm is WindowManager
     callback.onResult(wm.getDefaultDisplay().getHeight());
-   }
+  }
 });
 
 webView.registerHandler("log", new WVJBWebView.WVJBHandler() {
   @Override
-    public void handler(Object data, WVJBWebView.WVJBResponseCallback callback) {
-     Log.d("wvjsblog","Log: "+data.toString());
-   }
+  public void handler(Object data, WVJBWebView.WVJBResponseCallback callback) {
+    Log.d("wvjsblog", "Log: "+data.toString());
+  }
 });
 ```
 
@@ -157,14 +154,13 @@ Call the javascript handler called `handlerName`. If a `responseCallback`  is gi
 Example:
 
 ```objc
-webview.callHandler("showAlert","Hi from Java to JS!");
+webview.callHandler("showAlert", "Hi from Java to JS!");
 webview.callHandler("getCurrentPageUrl", null, new WVJBWebView.WVJBResponseCallback() {
-   @Override
+  @Override
     public void onResult(Object data) {
-     Log.d("wvjsblog","Current WVJBWebView page URL is: %@"+data.toString());
-   }
+    Log.d("wvjsblog", "Current WVJBWebView page URL is: %@"+data.toString());
+  }
 });
-                  
 ```
 
 ##### `webview.disableJavascriptAlertBoxSafetyTimeout(bool disable)`
@@ -173,25 +169,24 @@ UNSAFE. Speed up bridge message passing by disabling the setTimeout safety check
 
 Example:
 
-	webview.disableJavascriptAlertBoxSafetyTimeout(true);
-
-
+```java
+webview.disableJavascriptAlertBoxSafetyTimeout(true);
+```
 
 ### Javascript API
 
 ##### `bridge.registerHandler("handlerName", function(responseData) { ... })`
 
-Register a handler called `handlerName`. The Java can then call this handler with `webview callHandler("handlerName","Foo")` and `webview.callHandler("handlerName", "Foo",  new WVJBWebView.WVJBResponseCallback() {...})`
+Register a handler called `handlerName`. The Java can then call this handler with `webview callHandler("handlerName","Foo")` and `webview.callHandler("handlerName", "Foo", new WVJBWebView.WVJBResponseCallback() {...})`
 
 Example:
 
 ```javascript
 bridge.registerHandler("showAlert", function(data) { alert(data) })
 bridge.registerHandler("getCurrentPageUrl", function(data, responseCallback) {
-	responseCallback(document.location.toString())
+  responseCallback(document.location.toString())
 })
 ```
-
 
 ##### `bridge.callHandler("handlerName", data)`
 ##### `bridge.callHandler("handlerName", data, function responseCallback(responseData) { ... })`
@@ -203,10 +198,9 @@ Example:
 ```javascript
 bridge.callHandler("Log", "Foo")
 bridge.callHandler("getScreenHeight", null, function(response) {
-	alert('Screen height:' + response)
+  alert('Screen height:' + response)
 })
 ```
-
 
 ##### `bridge.disableJavascriptAlertBoxSafetyTimeout(...)`
 
@@ -221,8 +215,6 @@ bridge.disableJavascriptAlertBoxSafetyTimeout()
 bridge.disableJavascriptAlertBoxSafetyTimeout(false)
 ```
 
-
-
 ## Expansion For Android
 
 In this Android version, I have added a way to judge whether the handler (Javascript and java) exists.
@@ -232,34 +224,36 @@ In this Android version, I have added a way to judge whether the handler (Javasc
 ```java
 webview.hasJavascriptMethod(String handlerName,  WVJBMethodExistCallback callback)
 ```
+
 For example:
 
 ```java
 webView.hasJavascriptMethod("echoHandler", new WVJBWebView.WVJBMethodExistCallback() {
-    @Override
-    public void onResult(boolean exist) {
-        if(exist) {
-            Log.d("wvjsblog", "Javascript handler 'echoHandler' exist. ");
-        }
+  @Override
+  public void onResult(boolean exist) {
+    if(exist) {
+      Log.d("wvjsblog", "Javascript handler 'echoHandler' exist. ");
     }
+  }
 });
 ```
+
 **In Javascript**
+
 ```javascript
-bridge.hasNativeMethod("handlerName",function responseCallback(responseData){...})
+bridge.hasNativeMethod("handlerName", function responseCallback(responseData){...})
 ```
+
 For example:
 
 ```javascript
-bridge.hasNativeMethod('javaEchoToJs',function(exist){
-   if(exist){
-     console.log("Native method 'javaEchoToJs' exist! ")
-   }
+bridge.hasNativeMethod('javaEchoToJs', function(exist){
+  if(exist){
+    console.log("Native method 'javaEchoToJs' exist! ")
+  }
 })
 ```
+
 ## Compare with DSBridge
 
-[DSBridge](https://github.com/wendux/DSBridge-Android) is  a modern cross-platform JavaScript bridge, through which you can invoke each other's functions synchronously or asynchronously between JavaScript and native applications. On the whole, [DSBridge](https://github.com/wendux/DSBridge-Android)  is more powerful than WebViewJavascriptBridge.  If you are a new user, I strongly suggest that you use DSBridge instead. More details please rerfer to https://github.com/wendux/DSBridge-Android .
-
-
-
+[DSBridge](https://github.com/wendux/DSBridge-Android) is  a modern cross-platform JavaScript bridge, through which you can invoke each other's functions synchronously or asynchronously between JavaScript and native applications. On the whole, [DSBridge](https://github.com/wendux/DSBridge-Android) is more powerful than WebViewJavascriptBridge. If you are a new user, I strongly suggest that you use DSBridge instead. More details please rerfer to [https://github.com/wendux/DSBridge-Android](https://github.com/wendux/DSBridge-Android).
