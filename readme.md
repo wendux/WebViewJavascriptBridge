@@ -1,7 +1,12 @@
 WebViewJavascriptBridge
 =======================
 
-[![](https://jitpack.io/v/wendux/WebViewJavascriptBridge.svg)](https://jitpack.io/#wendux/WebViewJavascriptBridge) ![language](https://img.shields.io/badge/language-Java-yellow.svg) [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://opensource.org/licenses/mit-license.php) [![](https://travis-ci.org/wendux/WebViewJavascriptBridge.svg?branch=master)](https://travis-ci.org/wendux/WebViewJavascriptBridge) ![](https://img.shields.io/badge/minSdkVersion-17-yellow.svg) [![GitHub last commit](https://img.shields.io/github/last-commit/google/skia.svg?color=blue)]()
+[![](https://jitpack.io/v/wendux/WebViewJavascriptBridge.svg)](https://jitpack.io/#wendux/WebViewJavascriptBridge)
+![language](https://img.shields.io/badge/language-Java-yellow.svg)
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://opensource.org/licenses/mit-license.php)
+[![](https://travis-ci.org/wendux/WebViewJavascriptBridge.svg?branch=master)](https://travis-ci.org/wendux/WebViewJavascriptBridge)
+![](https://img.shields.io/badge/minSdkVersion-11-yellow.svg)
+[![GitHub last commit](https://img.shields.io/github/last-commit/wendux/WebViewJavascriptBridge.svg?color=blue)]()
 
 An  **Android**  bridge for sending messages between Java and JavaScript in WebView. and It is a mirror of [marcuswestin/WebViewJavascriptBridge](https://github.com/marcuswestin/WebViewJavascriptBridge) (object-c) and [Lision/WKWebViewJavascriptBridge](https://github.com/Lision/WKWebViewJavascriptBridge)(swift) which supports IOS platforms.
 

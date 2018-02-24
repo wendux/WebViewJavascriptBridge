@@ -15,7 +15,12 @@
             responseCallbacks[callbackId] = responseCallback;
             message['callbackId'] = callbackId;
         }
-        window.WVJBInterface && WVJBInterface.notice(JSON.stringify(message || {}));
+        var msg=JSON.stringify(message || {});
+        if(window.WVJBInterface){
+           WVJBInterface.notice(msg);
+        }else{
+          prompt("_wvjbxx",msg);
+        }
     }
 
     var bridge = {

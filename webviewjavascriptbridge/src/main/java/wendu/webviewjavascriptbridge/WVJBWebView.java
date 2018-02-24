@@ -368,17 +368,19 @@ public class WVJBWebView extends WebView {
                 disableJavascriptAlertBoxSafetyTimeout((boolean)data);
             }
         });
-        super.addJavascriptInterface(new Object() {
-            @Keep
-            @JavascriptInterface
-            public void notice(String info) {
-                Message msg = new Message();
-                msg.what = HANDLE_MESSAGE;
-                msg.obj = info;
-                mainThreadHandler.sendMessage(msg);
-            }
+        if(Build.VERSION.SDK_INT>Build.VERSION_CODES.JELLY_BEAN){
+            super.addJavascriptInterface(new Object() {
+                @Keep
+                @JavascriptInterface
+                public void notice(String info) {
+                    Message msg = new Message();
+                    msg.what = HANDLE_MESSAGE;
+                    msg.obj = info;
+                    mainThreadHandler.sendMessage(msg);
+                }
 
-        }, BRIDGE_NAME);
+            }, BRIDGE_NAME);
+        }
 
     }
 
@@ -607,6 +609,16 @@ public class WVJBWebView extends WebView {
         @Override
         public boolean onJsPrompt(WebView view, String url, final String message,
                                   String defaultValue, final JsPromptResult result) {
+            if(Build.VERSION.SDK_INT<=Build.VERSION_CODES.JELLY_BEAN){
+                String prefix="_wvjbxx";
+                if(message.equals(prefix)){
+                    Message msg = new Message();
+                    msg.what = HANDLE_MESSAGE;
+                    msg.obj = defaultValue;
+                    mainThreadHandler.sendMessage(msg);
+                }
+                return true;
+            }
             if(!alertboxBlock){
                 result.confirm();
             }
@@ -1002,7 +1014,7 @@ public class WVJBWebView extends WebView {
 
         }
 
-        @Override
+        @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
         public void onReceivedLoginRequest(WebView view, String realm, String account, String args) {
             if (webViewClient != null) {
                 webViewClient.onReceivedLoginRequest(view, realm, account, args);
