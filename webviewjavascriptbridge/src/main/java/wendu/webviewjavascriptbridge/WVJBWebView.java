@@ -848,7 +848,6 @@ public class WVJBWebView extends WebView {
         }
 
         @TargetApi(Build.VERSION_CODES.M)
-        @Override
         public void onPageCommitVisible(WebView view, String url) {
             if (webViewClient != null) {
                 webViewClient.onPageCommitVisible(view, url);
@@ -868,7 +867,6 @@ public class WVJBWebView extends WebView {
         }
 
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-        @Override
         public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
             if (webViewClient != null) {
                 return webViewClient.shouldInterceptRequest(view, request);
@@ -898,7 +896,6 @@ public class WVJBWebView extends WebView {
         }
 
         @TargetApi(Build.VERSION_CODES.M)
-        @Override
         public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
             if (webViewClient != null) {
                 webViewClient.onReceivedError(view, request, error);
@@ -908,7 +905,6 @@ public class WVJBWebView extends WebView {
         }
 
         @TargetApi(Build.VERSION_CODES.M)
-        @Override
         public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
             if (webViewClient != null) {
                 webViewClient.onReceivedHttpError(view, request, errorResponse);
@@ -948,7 +944,6 @@ public class WVJBWebView extends WebView {
         }
 
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-        @Override
         public void onReceivedClientCertRequest(WebView view, ClientCertRequest request) {
             if (webViewClient != null) {
                 webViewClient.onReceivedClientCertRequest(view, request);
@@ -988,7 +983,6 @@ public class WVJBWebView extends WebView {
         }
 
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-        @Override
         public void onUnhandledInputEvent(WebView view, InputEvent event) {
             if (webViewClient != null) {
                 webViewClient.onUnhandledInputEvent(view, event);

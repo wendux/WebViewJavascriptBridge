@@ -87,7 +87,7 @@ function setupWebViewJavascriptBridge(callback) {
 	var callbacks=window.WVJBCallbacks||window.WKWVJBCallbacks
 	if (callbacks) { return callbacks.push(callback); }
 	window.WVJBCallbacks=window.WKWVJBCallbacks = [callback];
-	if(window.WKWVJBCallbacks){
+	if(window.WKWebViewJavascriptBridge){
 	  //for https://github.com/Lision/WKWebViewJavascriptBridge
 	  window.webkit.messageHandlers.iOS_Native_InjectJavascript.postMessage(null)
 	}else{
