@@ -456,6 +456,31 @@ public class WVJBWebView extends WebView {
 
         @Override
         public void onProgressChanged(WebView view, int newProgress) {
+
+            if(newProgress>80) {
+                try {
+                    InputStream is = view.getContext().getAssets()
+                            .open("WebViewJavascriptBridge.js");
+                    int size = is.available();
+                    byte[] buffer = new byte[size];
+                    is.read(buffer);
+                    is.close();
+                    String js = new String(buffer);
+                    evaluateJavascript(js);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                synchronized (WVJBWebView.this) {
+                    if (startupMessageQueue != null) {
+                        for (int i = 0; i < startupMessageQueue.size(); i++) {
+                            dispatchMessage(startupMessageQueue.get(i));
+                        }
+                        startupMessageQueue = null;
+                    }
+                }
+            }
+
             if (webChromeClient != null) {
                 webChromeClient.onProgressChanged(view, newProgress);
             } else {
@@ -500,7 +525,7 @@ public class WVJBWebView extends WebView {
         }
 
 
-        @Override
+        @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
         public void onShowCustomView(View view, int requestedOrientation,
                                      CustomViewCallback callback) {
             if (webChromeClient != null) {
@@ -819,28 +844,6 @@ public class WVJBWebView extends WebView {
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            // inject code
-            try {
-                InputStream is = view.getContext().getAssets()
-                        .open("WebViewJavascriptBridge.js");
-                int size = is.available();
-                byte[] buffer = new byte[size];
-                is.read(buffer);
-                is.close();
-                String js = new String(buffer);
-                evaluateJavascript(js);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            synchronized(WVJBWebView.this) {
-                if (startupMessageQueue != null) {
-                    for (int i = 0; i < startupMessageQueue.size(); i++) {
-                        dispatchMessage(startupMessageQueue.get(i));
-                    }
-                    startupMessageQueue = null;
-                }
-            }
 
             if (webViewClient != null) {
                 webViewClient.onPageFinished(view, url);
