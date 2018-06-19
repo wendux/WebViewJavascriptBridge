@@ -373,9 +373,7 @@ public class WVJBWebView extends WebView {
                 @Keep
                 @JavascriptInterface
                 public void notice(String info) {
-                    Message msg = new Message();
-                    msg.what = HANDLE_MESSAGE;
-                    msg.obj = info;
+                    Message msg = mainThreadHandler.obtainMessage(HANDLE_MESSAGE, info);
                     mainThreadHandler.sendMessage(msg);
                 }
 
@@ -401,9 +399,7 @@ public class WVJBWebView extends WebView {
         if (Looper.getMainLooper() == Looper.myLooper()) {
             _evaluateJavascript(script);
         } else {
-            Message msg = new Message();
-            msg.what = EXEC_SCRIPT;
-            msg.obj = script;
+            Message msg = mainThreadHandler.obtainMessage(EXEC_SCRIPT, script);
             mainThreadHandler.sendMessage(msg);
         }
     }
@@ -416,9 +412,7 @@ public class WVJBWebView extends WebView {
      */
     @Override
     public void loadUrl(String url) {
-        Message msg = new Message();
-        msg.what = LOAD_URL;
-        msg.obj = url;
+        Message msg = mainThreadHandler.obtainMessage(LOAD_URL, url);
         mainThreadHandler.sendMessage(msg);
     }
 
@@ -431,9 +425,7 @@ public class WVJBWebView extends WebView {
      */
     @Override
     public void loadUrl(String url, Map<String, String> additionalHttpHeaders) {
-        Message msg = new Message();
-        msg.what = LOAD_URL_WITH_HEADERS;
-        msg.obj = new RequestInfo(url, additionalHttpHeaders);
+        Message msg = mainThreadHandler.obtainMessage(LOAD_URL_WITH_HEADERS, new RequestInfo(url, additionalHttpHeaders));
         mainThreadHandler.sendMessage(msg);
     }
 
@@ -637,9 +629,7 @@ public class WVJBWebView extends WebView {
             if(Build.VERSION.SDK_INT<=Build.VERSION_CODES.JELLY_BEAN){
                 String prefix="_wvjbxx";
                 if(message.equals(prefix)){
-                    Message msg = new Message();
-                    msg.what = HANDLE_MESSAGE;
-                    msg.obj = defaultValue;
+                    Message msg = mainThreadHandler.obtainMessage(HANDLE_MESSAGE, defaultValue);
                     mainThreadHandler.sendMessage(msg);
                 }
                 return true;
