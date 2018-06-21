@@ -1,6 +1,7 @@
 package wendu.jsbdemo;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -12,6 +13,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if(Build.VERSION.SDK_INT>=21){
+            getSupportActionBar().setElevation(0.5f);
+        }
         Button echoBtn= (Button) findViewById(R.id.echo);
         Button example= (Button) findViewById(R.id.example);
         Button fly= (Button) findViewById(R.id.fly);
