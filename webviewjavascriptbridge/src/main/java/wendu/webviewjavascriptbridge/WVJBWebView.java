@@ -73,6 +73,7 @@ public class WVJBWebView extends WebView {
         WeakReference<Context> mContextReference;
 
         MyHandler(Context context) {
+            super(Looper.getMainLooper());
             mContextReference = new WeakReference<>(context);
         }
 
@@ -341,7 +342,6 @@ public class WVJBWebView extends WebView {
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         settings.setJavaScriptEnabled(true);
         settings.setLoadWithOverviewMode(true);
-        settings.setSupportMultipleWindows(true);
         settings.setAppCachePath(APP_CACHE_DIRNAME);
         settings.setUseWideViewPort(true);
         super.setWebChromeClient(mWebChromeClient);
@@ -388,7 +388,7 @@ public class WVJBWebView extends WebView {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WVJBWebView.super.evaluateJavascript(script, null);
         } else {
-            loadUrl("javascript:" + script);
+            super.loadUrl("javascript:" + script);
         }
     }
 
