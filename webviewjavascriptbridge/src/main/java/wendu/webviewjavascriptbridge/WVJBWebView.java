@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.net.http.SslError;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -16,31 +15,32 @@ import android.support.annotation.Keep;
 import android.support.v7.app.AlertDialog;
 import android.util.AttributeSet;
 import android.view.Gravity;
-import android.view.InputEvent;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.ClientCertRequest;
-import android.webkit.ConsoleMessage;
-import android.webkit.CookieManager;
-import android.webkit.GeolocationPermissions;
-import android.webkit.HttpAuthHandler;
 import android.webkit.JavascriptInterface;
-import android.webkit.JsPromptResult;
-import android.webkit.JsResult;
-import android.webkit.PermissionRequest;
-import android.webkit.SslErrorHandler;
-import android.webkit.ValueCallback;
-import android.webkit.WebChromeClient;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
-import android.webkit.WebSettings;
-import android.webkit.WebStorage;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+
+import com.tencent.smtt.export.external.interfaces.ClientCertRequest;
+import com.tencent.smtt.export.external.interfaces.ConsoleMessage;
+import com.tencent.smtt.export.external.interfaces.GeolocationPermissionsCallback;
+import com.tencent.smtt.export.external.interfaces.HttpAuthHandler;
+import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient;
+import com.tencent.smtt.export.external.interfaces.JsPromptResult;
+import com.tencent.smtt.export.external.interfaces.JsResult;
+import com.tencent.smtt.export.external.interfaces.SslError;
+import com.tencent.smtt.export.external.interfaces.SslErrorHandler;
+import com.tencent.smtt.export.external.interfaces.WebResourceError;
+import com.tencent.smtt.export.external.interfaces.WebResourceRequest;
+import com.tencent.smtt.export.external.interfaces.WebResourceResponse;
+import com.tencent.smtt.sdk.CookieManager;
+import com.tencent.smtt.sdk.ValueCallback;
+import com.tencent.smtt.sdk.WebChromeClient;
+import com.tencent.smtt.sdk.WebSettings;
+import com.tencent.smtt.sdk.WebStorage;
+import com.tencent.smtt.sdk.WebView;
+import com.tencent.smtt.sdk.WebViewClient;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -335,7 +335,7 @@ public class WVJBWebView extends WebView {
         settings.setDomStorageEnabled(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             CookieManager.getInstance().setAcceptThirdPartyCookies(this, true);
-            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+            settings.setMixedContentMode(0);
         }
         settings.setAllowFileAccess(false);
         settings.setAppCacheEnabled(false);
@@ -508,7 +508,7 @@ public class WVJBWebView extends WebView {
         }
 
         @Override
-        public void onShowCustomView(View view, CustomViewCallback callback) {
+        public void onShowCustomView(View view, IX5WebChromeClient.CustomViewCallback callback) {
             if (webChromeClient != null) {
                 webChromeClient.onShowCustomView(view, callback);
             } else {
@@ -519,7 +519,7 @@ public class WVJBWebView extends WebView {
 
         @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
         public void onShowCustomView(View view, int requestedOrientation,
-                                     CustomViewCallback callback) {
+                                     IX5WebChromeClient.CustomViewCallback callback) {
             if (webChromeClient != null) {
                 webChromeClient.onShowCustomView(view, requestedOrientation, callback);
             } else {
@@ -710,7 +710,7 @@ public class WVJBWebView extends WebView {
         }
 
         @Override
-        public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
+        public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissionsCallback callback) {
             if (webChromeClient != null) {
                 webChromeClient.onGeolocationPermissionsShowPrompt(origin, callback);
             } else {
@@ -727,28 +727,6 @@ public class WVJBWebView extends WebView {
             }
         }
 
-
-        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-        @Override
-        public void onPermissionRequest(PermissionRequest request) {
-            if (webChromeClient != null) {
-                webChromeClient.onPermissionRequest(request);
-            } else {
-                super.onPermissionRequest(request);
-            }
-        }
-
-
-        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-        @Override
-        public void onPermissionRequestCanceled(PermissionRequest request) {
-            if (webChromeClient != null) {
-                webChromeClient.onPermissionRequestCanceled(request);
-            } else {
-                super.onPermissionRequestCanceled(request);
-            }
-        }
-
         @Override
         public boolean onJsTimeout() {
             if (webChromeClient != null) {
@@ -758,21 +736,14 @@ public class WVJBWebView extends WebView {
         }
 
         @Override
-        public void onConsoleMessage(String message, int lineNumber, String sourceID) {
+        public boolean onConsoleMessage(ConsoleMessage message) {
             if (webChromeClient != null) {
-                webChromeClient.onConsoleMessage(message, lineNumber, sourceID);
+                return webChromeClient.onConsoleMessage(message);
             } else {
-                super.onConsoleMessage(message, lineNumber, sourceID);
+                return super.onConsoleMessage(message);
             }
         }
 
-        @Override
-        public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
-            if (webChromeClient != null) {
-                return webChromeClient.onConsoleMessage(consoleMessage);
-            }
-            return super.onConsoleMessage(consoleMessage);
-        }
 
         @Override
         public Bitmap getDefaultVideoPoster() {
@@ -852,14 +823,6 @@ public class WVJBWebView extends WebView {
             }
         }
 
-        @TargetApi(Build.VERSION_CODES.M)
-        public void onPageCommitVisible(WebView view, String url) {
-            if (webViewClient != null) {
-                webViewClient.onPageCommitVisible(view, url);
-            } else {
-                super.onPageCommitVisible(view, url);
-            }
-        }
 
         @Override
         @Deprecated
@@ -983,16 +946,6 @@ public class WVJBWebView extends WebView {
                 webViewClient.onUnhandledKeyEvent(view, event);
             } else {
                 super.onUnhandledKeyEvent(view, event);
-            }
-
-        }
-
-        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-        public void onUnhandledInputEvent(WebView view, InputEvent event) {
-            if (webViewClient != null) {
-                webViewClient.onUnhandledInputEvent(view, event);
-            } else {
-                super.onUnhandledInputEvent(view, event);
             }
 
         }
