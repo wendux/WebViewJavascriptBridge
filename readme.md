@@ -1,3 +1,10 @@
+## 重要通知
+**由于笔者DSBridge(笔者开发的一个更强大的跨平台JavaScript Bridge)目前已取得大量用户，由于笔者精力有限，为了集中精力打造精品，此项目将不再维护，笔者将把主要精力放到DSBridge的维护与支持上，也欢迎大家使用DSBridge。**：
+
+DSBridge for Android: https://github.com/wendux/DSBridge-Android
+
+DSBridge for iOS: https://github.com/wendux/DSBridge-IOS
+
 WebViewJavascriptBridge
 =======================
 
